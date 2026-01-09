@@ -1,13 +1,66 @@
-from flask import Flask
+from flask import Flask, render_template
+
 
 app=Flask(__name__)
 
+@app.route('/hola')
+def index():
+    return "hola, hola"
+
+
+
 @app.route('/')
+def hola():
+    titulo = "IDGS-802-Flask"
+    lista = ['Juan', 'Karla', 'Miguel']
+    return render_template('index.html', titulo=titulo, lista=lista)
 
-def home():
+@app.route('/formularios')
+def formularios():
+    return render_template('formularios.html')
 
-    return "Hello, world!"
+
+@app.route('/reportes')
+def reportes():
+    return render_template('reportes.html')
+
+
+@app.route('/user/<string:user>')
+def user(user):
+    return "Hola " + user
+
+@app.route('/numero/<int:n>')
+def numero(n):
+    return "Numero: {}".format(n)
+
+@app.route('/user/<int:id>/<string:username>')
+def username(id, username):
+    return "ID: {} Nombre: {}".format(id, username)
+
+@app.route('/suma/<float:n1>/<float:n2>')
+def suma(n1, n2):
+    return "La suma es: {}".format(n1+n2)
+
+@app.route('/default')
+@app.route('/default/<string:param>')
+def func(param="juan"):
+    return f"<h1> !Hola, {param}!</h1>"
+
+@app.route("/operas")
+def operas():
+    return '''
+        <form>
+        <label for = "name">Name:</label>
+        <input type = "text" id = "name" name = "name" required>
+        <br>
+        <br>
+        <label for = "name">A_Paterno:</label>
+        <input type = "text" id = "apaterno" name = "apaterno" required>
+        </form>
+    '''
+
+
 
 if __name__  == '__main__':
+    app.run(debug = True)
 
-    app.run(debug=True)

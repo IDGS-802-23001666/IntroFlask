@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 
 app=Flask(__name__)
@@ -6,8 +6,6 @@ app=Flask(__name__)
 @app.route('/hola')
 def index():
     return "hola, hola"
-
-
 
 @app.route('/')
 def hola():
@@ -59,7 +57,38 @@ def operas():
         </form>
     '''
 
+@app.route("/operasBas")
+def operasBas():
+    return render_template('operasBas.html')
 
+@app.route("/resultado", methods=["GET", "POST"])
+def resultado():
+    if request.method == "POST":
+        n1 = float(request.form.get("num1"))
+        n2 = float(request.form.get("num2"))
+        op = request.form.get("operacion")
+        
+        res = 0
+        texto_op = ""
+
+        if op == "suma":
+            res = n1 + n2
+            texto_op = "suma"
+        elif op == "resta":
+            res = n1 - n2
+            texto_op = "resta"
+        elif op == "multi":
+            res = n1 * n2
+            texto_op = "multiplicación"
+        elif op == "divi":
+            if n2 != 0:
+                res = n1 / n2
+                texto_op = "división"
+            else:
+                return "Error: No se puede dividir entre cero."
+
+        return f"El resultado de la {texto_op} es: {res}"
+    
 
 if __name__  == '__main__':
     app.run(debug = True)

@@ -57,9 +57,16 @@ def operas():
         </form>
     '''
 
-@app.route("/operasBas")
+@app.route("/operasBas", methods = ["GET", "POST"])
 def operasBas():
-    return render_template('operasBas.html')
+    n1 = 0
+    n2 = 0
+    res = 0
+    if request.method == "POST":
+        n1 = float(request.form.get("num1"))
+        n2 = float(request.form.get("num2"))
+        res = float(n1)/float(n2)
+    return render_template('operasBas.html', n1=n1, n2=n2, res=res)
 
 @app.route("/resultado", methods=["GET", "POST"])
 def resultado():
@@ -89,6 +96,22 @@ def resultado():
 
         return f"El resultado de la {texto_op} es: {res}"
     
+@app.route("/alumnos")
+def alumnos():
+    return render_template('alumnos.html')
+
+@app.route("/distancia", methods=["GET", "POST"]) 
+def distancia():
+    res = None 
+    if request.method == "POST":
+        x1 = float(request.form.get("x1"))
+        y1 = float(request.form.get("y1"))
+        x2 = float(request.form.get("x2"))
+        y2 = float(request.form.get("y2"))
+        res = ((x2-x1)**2 + (y2-y1)**2)**0.5
+    
+    return render_template('distancia.html', res=res)
+
 
 if __name__  == '__main__':
     app.run(debug = True)

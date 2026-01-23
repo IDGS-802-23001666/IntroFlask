@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+{% import "_macros.html" as macro %}
+
+<div class="container">
+    <form action="/distancia" method="post">
+
+        {{macro.datos("x1", "Ingresa la primer coordenada en x", "number")}}
+        {{macro.datos("y1", "Ingresa la primera coordenada en y", "number")}}
+        {{macro.datos("x2", "Ingresa la segunda coordenada en x", "number")}}
+        {{macro.datos("y2", "Ingresa la segunda coordenada en y", "number")}}
+
+        <button type="submit" class="btn btn-primary">Calcular</button>
+
+        {% if res is not none %}
+        <h1>
+            La distancia de las coordenadas es = {{ "%.2f"|format(res) }}
+        </h1>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

@@ -1,7 +1,14 @@
 from flask import Flask, render_template, request
+from flask import flash
+from flask_wtf.csrf import CSRFProtect
+
+import forms
+
 
 
 app=Flask(__name__)
+app.secret_key = 'Clave secreta'
+csrf = CSRFProtect()
 
 @app.route('/hola')
 def index():
@@ -12,6 +19,27 @@ def hola():
     titulo = "IDGS-802-Flask"
     lista = ['Juan', 'Karla', 'Miguel']
     return render_template('index.html', titulo=titulo, lista=lista)
+
+@app.route("/usuarios", methods = ["GET", "POST"])
+def usuarios():
+    mat = 0
+    nom = ''
+    apa = ''
+    ama = ''
+    email = ''
+    usuarios_class = forms.UserForm(request.form)
+    if request.method == "POST" and usuarios_class.validate():
+        mat = usuarios_class.matricula.data
+        nom = usuarios_class.nombre.data
+        apa = usuarios_class.aPaterno.data
+        ama = usuarios_class.aMaterno.data
+        email = usuarios_class.email.data
+
+        mensaje = 'Bienvenido {}'.format(nom)
+        flash(mensaje)
+        
+
+    return render_template('usuarios.html', form = usuarios_class, mat=mat, nom=nom, apa=apa, ama=ama, email=email) 
 
 @app.route('/formularios')
 def formularios():
@@ -113,6 +141,8 @@ def distancia():
     return render_template('distancia.html', res=res)
 
 
+
 if __name__  == '__main__':
+    csrf.init_app(app)
     app.run(debug = True)
 

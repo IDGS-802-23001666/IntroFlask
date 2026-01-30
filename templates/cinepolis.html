@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macro %}
+
+{% block content %}
+<div class="container mt-4">
+    <form action="/cine" method="POST" novalidate>
+        {{ form.csrf_token }}
+        <input type = "hidden" name = "csrf_token" value = "{{csrf_token()}}">
+        
+        <div class="row bg-primary text-white p-4 rounded">
+            <div class="col-md-6">
+                <h3>CINEPOLIS</h3>
+                {{ macro.campoNuevo(form.nombre, class="form-control") }}
+                {{ macro.campoNuevo(form.compradores, class="form-control") }}
+                {{ macro.campoNuevo(form.boletas, class="form-control") }}
+                
+                <div class="mb-3">
+                    {{ form.tarjeta.label }} <br>
+                    {{ form.tarjeta() }}
+                </div>
+                
+                <button type="submit" class="btn btn-info">PROCESAR</button>
+                <a href="/cine" class="btn btn-success">PAGAR</a>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <h3>SALIDAS</h3>
+                <div class="bg-light text-dark p-3 mt-4">
+                    <p>VALOR A PAGAR</p>
+                    <h2>${{ "{:,.2f}".format(total) }}</h2>
+                </div>
+                {% if error %}
+                    <div class="alert alert-danger mt-2">{{ error }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

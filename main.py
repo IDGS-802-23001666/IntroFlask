@@ -5,7 +5,6 @@ from flask_wtf.csrf import CSRFProtect
 import forms
 
 
-
 app=Flask(__name__)
 app.secret_key = 'Clave secreta'
 csrf = CSRFProtect()
@@ -40,6 +39,39 @@ def usuarios():
         
 
     return render_template('usuarios.html', form = usuarios_class, mat=mat, nom=nom, apa=apa, ama=ama, email=email) 
+
+
+@app.route("/cine", methods=["GET", "POST"])
+def cine():
+    nom = ''
+    total = 0
+    error = None
+    cine_form = forms.CinepolisForm(request.form)
+    
+    if request.method == "POST" and cine_form.validate():
+        nom = cine_form.nombre.data
+        comp = cine_form.compradores.data
+        cant = cine_form.boletas.data
+        tiene_tarjeta = cine_form.tarjeta.data == 'SI'
+        
+        max_permitido = comp * 7
+        
+        if cant > max_permitido:
+            error = f"Límite excedido. Máximo {max_permitido} boletas."
+        else:
+            subtotal = cant * 12
+            
+            if cant > 5:
+                subtotal *= 0.85
+            elif 3 <= cant <= 5:
+                subtotal *= 0.90
+                
+            if tiene_tarjeta:
+                subtotal *= 0.90
+            
+            total = subtotal
+
+    return render_template('cinepolis.html', form=cine_form, nom=nom, total=total, error=error)
 
 @app.route('/formularios')
 def formularios():
